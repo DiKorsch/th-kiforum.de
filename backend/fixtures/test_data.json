@@ -1,0 +1,71 @@
+[
+  {
+    "model": "api.organisation",
+    "pk": 1,
+    "fields": {
+      "name": "TechHub Berlin",
+      "description": "Innovationsnetzwerk für digitale Produktentwicklung und KI-Projekte.",
+      "website": "https://techhub-berlin.example"
+    }
+  },
+  {
+    "model": "api.organisation",
+    "pk": 2,
+    "fields": {
+      "name": "SmartFactory GmbH",
+      "description": "Unternehmen für automatisierte Fertigungs- und Monitoringlösungen.",
+      "website": "https://smartfactory.example"
+    }
+  },
+  {
+    "model": "api.contactperson",
+    "pk": 1,
+    "fields": {
+      "name": "Anna Müller",
+      "email": "anna.mueller@example.com",
+      "phone_number": "+49 30 12345678"
+    }
+  },
+  {
+    "model": "api.contactperson",
+    "pk": 2,
+    "fields": {
+      "name": "Jonas Weber",
+      "email": "jonas.weber@example.com",
+      "phone_number": "+49 151 98765432"
+    }
+  },
+  {
+    "model": "api.demonstrator",
+    "pk": 1,
+    "fields": {
+      "title": "KI-gestützte Prozessautomatisierung",
+      "key": "AB12",
+      "description": "Demonstrator zur automatischen Erkennung und Steuerung von Geschäftsprozessen mithilfe von KI.",
+      "organisation": 1,
+      "contact_person": 1
+    }
+  },
+  {
+    "model": "api.demonstrator",
+    "pk": 2,
+    "fields": {
+      "title": "Intelligente Qualitätskontrolle",
+      "key": "CS12",
+      "description": "Demo für Bildanalyse und Fehlererkennung in der Fertigung.",
+      "organisation": 2,
+      "contact_person": 2
+    }
+  },
+  {
+    "model": "api.demonstrator",
+    "pk": 3,
+    "fields": {
+      "title": "Chatbot für Kundenservice",
+      "key": "DE12",
+      "description": "Konversationssystem zur Unterstützung von Support- und Serviceprozessen.",
+      "organisation": 1,
+      "contact_person": 2
+    }
+  }
+]
