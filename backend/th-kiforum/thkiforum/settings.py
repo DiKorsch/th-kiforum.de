@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
+
 from pathlib import Path
+from corsheaders.defaults import default_headers
+from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,17 +24,40 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q70+k)1)h9(8s&f4qo9b4i4=a94m8t7f@nbf(=*7aj^4@t#wth'
+SECRET_KEY_FILE = Path(os.environ.get("AUDISUM_SECRET_KEYFILE", BASE_DIR / 'secret.txt'))
+
+if not SECRET_KEY_FILE.exists():
+    with open(SECRET_KEY_FILE, "w") as f:
+        f.write(get_random_secret_key())
+
+    os.chmod(SECRET_KEY_FILE, 0o600)
+
+SECRET_KEY = open(SECRET_KEY_FILE).read()
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
+FRONTEND_PORT = os.environ.get("FRONTEND_PORT", "3000")
+
+CORS_ALLOWED_ORIGINS = [
+    f'http://localhost:{FRONTEND_PORT}',
+    f'http://127.0.0.1:{FRONTEND_PORT}',
+    f'http://192.168.1.45:{FRONTEND_PORT}',
+]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'contenttype',
+]
+
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +72,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
