@@ -1,6 +1,7 @@
 <template>
     <v-footer name="footer" class="d-flex align-center justify-center ga-2 flex-wrap flex-grow-1 py-3" color="surface-light" app>
-        <v-btn variant="plain"> Here </v-btn>
+        <v-btn variant="plain" to="/impressum"> Impressum </v-btn>
+        <v-btn variant="plain" to="/datenschutz"> Datenschutz </v-btn>
 
         <div class="flex-1-0-100 text-center mt-2">
             {{ new Date().getFullYear() }} —
