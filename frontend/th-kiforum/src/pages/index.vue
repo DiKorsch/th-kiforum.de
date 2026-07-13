@@ -36,10 +36,19 @@
           rounded="lg"
           variant="tonal"
           min-height="200"
-          :title="demo.title"
-          :append-icon="icon(demo)"
-          @click="toggle(demo)"
         >
+          <v-card-title>
+            <div class="text-h6 font-weight-bold d-flex align-center">
+              {{ demo.title }}
+            <v-icon
+              :color="selectedDemos.includes(demo.key) ? 'success' : 'grey'"
+              class="ml-auto"
+              @click="toggle(demo)"
+            >
+              {{ icon(demo) }}
+            </v-icon>
+            </div>
+          </v-card-title>
 
           <v-card-text>
             <div class="text-body-large">
