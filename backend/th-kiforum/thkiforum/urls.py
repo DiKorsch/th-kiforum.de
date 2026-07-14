@@ -20,6 +20,7 @@ from django.urls import include
 from rest_framework import routers
 
 from api.views import DemonstratorViewSet
+from api.views import get_content
 
 router = routers.DefaultRouter()
 router.register(r'demonstrators', DemonstratorViewSet)
@@ -28,4 +29,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path("content/<str:content_name>/", get_content, name="get_content")
 ]

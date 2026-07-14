@@ -2,3 +2,5 @@ django~=5.2
 djangorestframework~=3.17
 django-cleanup~=9.0
 django-cors-headers==4.9.0
+markdown-it-py
+django-mdeditor

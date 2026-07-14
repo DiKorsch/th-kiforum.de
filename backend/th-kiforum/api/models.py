@@ -3,6 +3,7 @@ import random
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from mdeditor.fields import MDTextField
 
 # Create your models here.
 
@@ -49,3 +50,12 @@ def generate_key(sender, instance, created: bool, raw: bool, **kwargs):
 
     instance.key = key
     instance.save()
+
+
+class Content(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+
+    content = MDTextField() #models.TextField()
+
+    def __str__(self):
+        return self.name
