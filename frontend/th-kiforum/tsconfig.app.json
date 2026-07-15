@@ -17,6 +17,8 @@
         "./src/*"
       ]
     }
+    ,
+    "rootDir": "."
   },
   "vueCompilerOptions": {
     "plugins": [

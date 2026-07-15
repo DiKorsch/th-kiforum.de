@@ -18,9 +18,10 @@
   import { ref, onMounted, computed } from 'vue'
 
   const appStore = useAppStore()
-  const BASE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL + '/api/v1'
+  const BASE_BACKEND_URL = (import.meta.env.VITE_BACKEND_URL || "") + '/api/v1'
 
   onMounted(() => {
+    console.log(`Using ${BASE_BACKEND_URL} as backend URL`)
     fetch(`${BASE_BACKEND_URL}/demonstrators/`)
       .then(response => response.json())
       .then(data => {

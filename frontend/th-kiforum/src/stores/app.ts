@@ -19,6 +19,7 @@ interface Demo {
   id: string
   title: string
   description: string
+  url: string
   key: string
   contact_person: User
   organisation: Organisation

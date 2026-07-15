@@ -1,0 +1,75 @@
+services:
+  backend-uwsgi:
+    container_name: th-kiforum-uwsgi
+    env_file: [".env"]
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      PYTHONUNBUFFERED: 1
+      ALLOWED_HOSTS: localhost,192.168.1.45,127.0.0.1,0.0.0.0,backend,th-kiforum.de
+      STATIC_ROOT: "/staticfiles"
+
+    restart: unless-stopped
+
+    volumes:
+      - ./backend/db/:/db
+      - uwsgi_data:/tmp/uwsgi/
+      - web_static:/staticfiles/
+
+    command:
+      - sh
+      - -c
+      - |
+        python manage.py collectstatic --noinput
+        uwsgi --ini uwsgi.ini
+
+    depends_on:
+      backend-migrations:
+        condition: service_completed_successfully
+
+  backend-migrations:
+    container_name: th-kiforum-migrations
+    env_file: [".env"]
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/db/:/db
+      - ./backend/fixtures:/app/fixtures
+
+    command:
+      - sh
+      - -c
+      - |
+        python manage.py migrate && python manage.py loaddata /app/fixtures/auth.json
+
+
+  nginx:
+    container_name: th-kiforum-nginx
+
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+      - web_static:/app/static/
+      - web_static:/var/www/static/
+      # - frontend:/var/www/html
+      - ./backend/media:/var/www/media/
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+
+    depends_on:
+      backend-uwsgi:
+        condition: service_started
+
+    ports:
+      - ${NGINX_PORT:-8000}:80
+
+
+volumes:
+  uwsgi_data:
+  web_static:
