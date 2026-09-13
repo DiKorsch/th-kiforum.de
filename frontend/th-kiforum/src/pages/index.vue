@@ -39,7 +39,7 @@
         >
           <v-card-title>
             <div class="text-h6 font-weight-bold d-flex align-center">
-              {{ demo.title }}
+              {{ dotify(demo.title, 30) }}
             <v-icon
               :color="selectedDemos.includes(demo.key) ? 'success' : 'grey'"
               class="ml-auto"
@@ -52,7 +52,7 @@
 
           <v-card-text>
             <div class="text-body-large">
-              {{ demo.description }}
+              {{ dotify(demo.description, 300) }}
             </div>
           </v-card-text>
           <v-card-actions>
@@ -125,6 +125,13 @@
     }
   })
 
+  const dotify = computed(() => (title: string, n_chars: number) => {
+    // if title is longer than n_chars characters, truncate it and add "..." at the end
+    if (title.length > n_chars) {
+      return title.substring(0, n_chars) + '...'
+    }
+    return title
+  })
   const toggle = (demo: any) => {
     if (selectedDemos.value.includes(demo.key)) {
       selectedDemos.value = selectedDemos.value.filter((key: string) => key !== demo.key)
