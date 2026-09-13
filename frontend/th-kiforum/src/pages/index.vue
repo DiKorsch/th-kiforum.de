@@ -74,7 +74,7 @@
 
               <v-col cols="12" md="4">
                 <div class="text-body-medium font-weight-light mb-n1">
-                  <v-btn :href="demo.url" target="_blank" rel="noopener noreferrer" prepend-icon="mdi-information">
+                  <v-btn @click="moreInfo = demo.key" target="_blank" rel="noopener noreferrer" prepend-icon="mdi-information">
                     Weitere Infos
                   </v-btn>
                 </div>
@@ -86,6 +86,70 @@
       </v-col>
   </v-row>
 
+    <v-dialog
+      v-model="moreInfoIsOpen"
+      width="auto"
+    >
+      <v-card class="mx-auto" max-width="1600">
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-headline-small text-medium-emphasis ps-2">
+            {{moreInfoTitle}}
+          </div>
+          <v-btn
+            icon="mdi-close"
+            variant="text"
+            @click="moreInfo = undefined"
+          ></v-btn>
+        </v-card-title>
+        <v-card-subtitle class="d-flex justify-space-between align-center">
+          <div class="text-body-medium text-medium-emphasis ps-2">
+            Demonstrator von {{ moreInfoOrganisationName }}
+          </div>
+        </v-card-subtitle>
+        <v-card-text class="d-flex justify-space-between align-center">
+          <div class="text-medium-emphasis mb-4 ps-2">
+            {{moreInfoText}}
+          </div>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions class="d-flex justify-space-between align-center">
+
+          <v-row class="ps-2">
+            <v-col cols="12" md="4">
+              <div class="text-body-large font-weight-light mb-n1">
+                <v-btn :href="`mailto:${moreInfoEmail}`" variant="text" prepend-icon="mdi-account">
+                  {{ moreInfoName }}
+                </v-btn>
+              </div>
+            </v-col>
+            <v-col cols="12" md="4">
+              <div class="text-body-medium font-weight-light mb-n1">
+                <v-btn :href="moreInfoWebsite" target="_blank" rel="noopener noreferrer" variant="text" prepend-icon="mdi-domain">
+                {{ moreInfoOrganisationName }}
+                </v-btn>
+              </div>
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-btn
+                v-if="moreInfoDemo !== undefined"
+                :append-icon="icon(moreInfoDemo)"
+                :color="selectedDemos.includes(moreInfoDemo.key) ? 'success' : 'grey'"
+                @click="toggle(moreInfoDemo)"
+              >
+                {{ selectedDemos.includes(moreInfoDemo.key) ? 'Ausgewählt' : 'Auswählen' }}
+              </v-btn>
+              <v-icon
+
+                class="ml-auto"
+              >
+                {{  }}
+              </v-icon>
+            </v-col>
+
+          </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 
 </template>
@@ -99,9 +163,52 @@
   const filter = ref('')
   const selectedDemos = ref([] as string[])
   const onlySelected = ref(false)
+  const moreInfo = ref(undefined as any)
 
   const nSelectedDemos = computed(() => {
     return appStore.demos.filter((demo) => selectedDemos.value.includes(demo.key)).length
+  })
+
+  const moreInfoIsOpen = computed({
+    get: () => {
+      return moreInfo.value !== undefined
+    },
+    set: (value: boolean) => {
+      if (!value) {
+        moreInfo.value = undefined
+      }
+    }
+  })
+
+  const moreInfoDemo = computed(() => {
+    if (moreInfo.value === undefined) {
+      return undefined
+    }
+    return appStore.demos.find((demo) => demo.key === moreInfo.value)
+  })
+
+  const moreInfoTitle = computed(() => {
+    return moreInfoDemo.value?.title || ''
+  })
+
+  const moreInfoText = computed(() => {
+    return moreInfoDemo.value?.description || ''
+  })
+
+  const moreInfoEmail = computed(() => {
+    return moreInfoDemo.value?.contact_person.email || ''
+  })
+
+  const moreInfoName = computed(() => {
+    return moreInfoDemo.value?.contact_person.name || ''
+  })
+
+  const moreInfoWebsite = computed(() => {
+    return moreInfoDemo.value?.organisation.website || ''
+  })
+
+  const moreInfoOrganisationName = computed(() => {
+    return moreInfoDemo.value?.organisation.name || ''
   })
 
   const demos = computed(function getDemos() {
@@ -118,7 +225,7 @@
   })
 
   const icon = computed(() => (demo: any) => {
-    if (selectedDemos.value.includes(demo.key)) {
+    if (selectedDemos.value.includes(demo?.key)) {
       return 'mdi-check-circle'
     } else {
       return 'mdi-circle'
